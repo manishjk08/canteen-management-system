@@ -16,7 +16,7 @@ const router = createBrowserRouter([
 },
 
 {
-  element:<RoleBasedRoute allowedRoles={[2]} />,
+  element:<RoleBasedRoute allowedRoles={['Canteen Admin']} />,
   children:[
     {
       path:'/dashboard',
@@ -26,7 +26,7 @@ const router = createBrowserRouter([
 },
 
 {
-  element:<RoleBasedRoute allowedRoles={[1]} />,
+  element:<RoleBasedRoute allowedRoles={['Employee']} />,
   children:[
     {
     path:"/vote",

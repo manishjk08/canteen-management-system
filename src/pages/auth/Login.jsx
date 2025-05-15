@@ -30,7 +30,8 @@ const Login = () => {
         role:res.data.role,
       }))
       const role=res.data.role
-      if(role===2){
+      console.log('Role:', role, 'Type:', typeof role);
+      if(role==='Canteen Admin'){
         navigate ('/dashboard')
       }else{
         navigate('/vote')

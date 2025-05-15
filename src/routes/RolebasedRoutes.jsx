@@ -8,7 +8,7 @@ const RolebasedRoutes = ({ allowedRoles }) => {
   if (!access) {
     return <Navigate to="/" />;
   }
-  if (!allowedRoles.includes(parseInt(role))) {
+  if (!allowedRoles.includes((role))) {
     return <Navigate to="/" />;
   }
   return <Outlet />;

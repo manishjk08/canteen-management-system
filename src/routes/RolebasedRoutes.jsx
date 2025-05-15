@@ -1,0 +1,17 @@
+
+import { Navigate, Outlet } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
+const RolebasedRoutes = ({ allowedRoles }) => {
+  const role = useSelector((state) => state.auth.role);
+  const access = useSelector((state) => state.auth.access);
+  if (!access) {
+    return <Navigate to="/" />;
+  }
+  if (!allowedRoles.includes(parseInt(role))) {
+    return <Navigate to="/" />;
+  }
+  return <Outlet />;
+};
+
+export default RolebasedRoutes;

@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../features/auth/authSlice';
 import Form from './Form';
 import Table from './Table';
+import VoteCard from './VoteCard';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast'
@@ -84,17 +85,24 @@ const Dashboard = () => {
       </aside>
 
       <div className="flex-1 lg:ml-64 p-4 sm:p-6 lg:p-8 flex flex-col gap-10">
-        <Form
+        <div className="flex flex-col lg:flex-row gap-10">
+          <div className='w-full lg:w-2/3'>
+              <Form
           editMenu={editMenu}
           setEditMenu={setEditMenu}
-          fetchMenus={fetchMenus}
-          
-        />
+          fetchMenus={fetchMenus}/>
+          </div >
+         
+         <div className='w-full lg:w-2/3'>
+          <VoteCard/>
+          </div>
+        
+        </div>
+       
         <Table
           data={data}
           deleteMenu={deleteMenu}
-          setEditMenu={setEditMenu}
-        />
+          setEditMenu={setEditMenu}/>
       </div>
     </div>
   );

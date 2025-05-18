@@ -1,12 +1,13 @@
 
 import {useForm} from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../../features/auth/authSlice'
 import axios from 'axios'
 import { useState } from 'react'
 
 const Login = () => {
+  
     const [error,setError]=useState('')
     const navigate=useNavigate()
     const dispatch =useDispatch()
@@ -28,6 +29,7 @@ const Login = () => {
         access:res.data.access,
         refresh:res.data.refresh,
         role:res.data.role,
+        username:res.data.username,
       }))
       const role=res.data.role
       if(role==='Canteen Admin'){

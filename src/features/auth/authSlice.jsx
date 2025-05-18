@@ -5,6 +5,7 @@ import {jwtDecode} from 'jwt-decode';
 const access=localStorage.getItem('access')
 const refresh=localStorage.getItem('refresh')
 const role=localStorage.getItem('role')
+const username=localStorage.getItem('username')
 let user=null;
 if(access  ){
      const accessdecoded=jwtDecode(access)
@@ -27,6 +28,8 @@ const authSlice =createSlice({
            localStorage.setItem('access',action.payload.access)
            localStorage.setItem('refresh',action.payload.refresh)
            localStorage.setItem('role',action.payload.role)
+           localStorage.setItem('username',action.payload.username)
+           
         },
         logout:(state)=>{
             state.access=null;
@@ -36,6 +39,7 @@ const authSlice =createSlice({
             localStorage.removeItem('access')
             localStorage.removeItem('refresh')
             localStorage.removeItem('role')
+            localStorage.removeItem('username')
         }
     }
 })

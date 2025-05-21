@@ -11,16 +11,25 @@ import toast from 'react-hot-toast'
 const Dashboard = () => {
   const [data, setData] = useState([]);
   const [editMenu, setEditMenu] = useState(null);
+  const [todayMenuId, setTodayMenuId] = useState(null)
   const access = localStorage.getItem('access');
-  const refresh=localStorage.getItem('refresh')
+  const refresh = localStorage.getItem('refresh')
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const fetchMenus = async () => {
-    const res = await axios.get('http://127.0.0.1:8000/menus/', {
-      headers: { Authorization: `Bearer ${access}` },
-    });
-    setData(res.data);
+    try {
+      const res = await axios.get('http://127.0.0.1:8000/menus/', {
+        headers: { Authorization: `Bearer ${access}` },
+      });
+      setData(res.data);
+      const today = new Date().toISOString().split('T')[0];
+      const todayMenu = res.data.filter(menu => menu.date === today);
+      setTodayMenuId(todayMenu);
+    } catch (error) {
+      console.error('Failed to fetch menus:', error);
+      toast.error('Failed to load menus');
+    }
   };
 
   const deleteMenu = async (id) => {
@@ -46,21 +55,21 @@ const Dashboard = () => {
 
 
   const handleLogout = async () => {
-  try {
-    await axios.post(
-      'http://127.0.0.1:8000/logout/',
-      { refresh:refresh},
-      {
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-      }
-    );
-    dispatch(logout());
-  } catch (error) {
-    console.error("Logout failed:", error.response?.data || error.message);
-  }
-};
+    try {
+      await axios.post(
+        'http://127.0.0.1:8000/logout/',
+        { refresh: refresh },
+        {
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
+      dispatch(logout());
+    } catch (error) {
+      console.error("Logout failed:", error.response?.data || error.message);
+    }
+  };
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col lg:flex-row">
       <aside className="w-full lg:w-64 bg-white shadow-md p-6 flex flex-col justify-between lg:fixed lg:h-screen lg:top-0 lg:left-0">
@@ -85,24 +94,37 @@ const Dashboard = () => {
       </aside>
 
       <div className="flex-1 lg:ml-64 p-4 sm:p-6 lg:p-8 flex flex-col gap-10">
-        <div className="flex flex-col lg:flex-row gap-10">
-          <div className='w-full lg:w-2/3'>
-              <Form
-          editMenu={editMenu}
-          setEditMenu={setEditMenu}
-          fetchMenus={fetchMenus}/>
-          </div >
-         
-         <div className='w-full lg:w-2/3'>
-          <VoteCard/>
-          </div>
-        
-        </div>
-       
+     <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 p-4">
+  
+  <div className="w-full lg:w-2/3">
+    <Form
+      editMenu={editMenu}
+      setEditMenu={setEditMenu}
+      fetchMenus={fetchMenus}
+    />
+  </div>
+
+  
+<div className="w-full lg:w-1/3 p-4 bg-white shadow-md rounded-xl border border-gray-200">
+  <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-gray-700">Votes</h2>
+
+  <div className="flex flex-col gap-2 overflow-y-auto max-h-[300px] pr-2">
+    {todayMenuId?.length > 0 ? (
+      todayMenuId.map(menu => (
+        <VoteCard key={menu.id} menu={menu} />
+      ))
+    ) : (
+      <p className="text-gray-500 text-sm">No menus available for today.</p>
+    )}
+  </div>
+</div>
+</div>
+
+
         <Table
           data={data}
           deleteMenu={deleteMenu}
-          setEditMenu={setEditMenu}/>
+          setEditMenu={setEditMenu} />
       </div>
     </div>
   );

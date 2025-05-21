@@ -2,6 +2,7 @@ import axios from 'axios'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import {  useNavigate } from 'react-router-dom'
+import {toast} from 'react-hot-toast'
 
 const Register = () => {
   const[error,setError]=useState('')
@@ -26,6 +27,7 @@ const onSubmit=async(data)=>{
         'Content-Type': 'application/json',
       },
   })
+  toast.success('Registration sucessfull')
    navigate('/')
   }catch (err) {
     let message = 'Registration failed';

@@ -5,9 +5,9 @@ import {jwtDecode} from 'jwt-decode';
 const access=localStorage.getItem('access')
 const refresh=localStorage.getItem('refresh')
 const role=localStorage.getItem('role')
-const username=localStorage.getItem('username')
+
 let user=null;
-if(access  ){
+if(access){
      const accessdecoded=jwtDecode(access)
      user = accessdecoded
 }

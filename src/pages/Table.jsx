@@ -1,10 +1,19 @@
+import { useState } from 'react';
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
+  getSortedRowModel,
+  getPaginationRowModel,
 } from '@tanstack/react-table';
 
 const Table = ({ data, deleteMenu, setEditMenu }) => {
+  const [sorting,setSorting]=useState()
+  const[pagination,setPagination]=useState({
+      pageIndex:0,
+      pageSize:5,
+  })
+ 
   const columns = [
     {
       header: 'Date',
@@ -46,18 +55,31 @@ const Table = ({ data, deleteMenu, setEditMenu }) => {
   const table = useReactTable({
     data,
     columns,
+    state:{
+      sorting,
+      pagination,
+    },
+    onSortingChange:setSorting,
+    onPaginationChange:setPagination,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel:getSortedRowModel(),
+    getPaginationRowModel:getPaginationRowModel()
   });
 
   return (
+    <>
     <div className="w-full overflow-x-auto rounded-xl shadow-md bg-white border border-gray-200">
       <table className="min-w-full text-sm text-left text-gray-700">
         <thead className=" text-xs uppercase bg-gray-100 text-gray-600">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id} className="px-6 py-4 whitespace-nowrap">
+                <th key={header.id} className="px-6 py-4 whitespace-nowrap" onClick={header.column.getToggleSortingHandler()}>
                   {flexRender(header.column.columnDef.header, header.getContext())}
+                   {{
+                    asc: ' 🔼',
+                    desc: ' 🔽',
+                  }[header.column.getIsSorted()] ?? null}
                 </th>
               ))}
             </tr>
@@ -76,6 +98,27 @@ const Table = ({ data, deleteMenu, setEditMenu }) => {
         </tbody>
       </table>
     </div>
+     <div className="flex justify-center gap-2 mt-4">
+        <button
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+          className="px-2 py-1 border rounded disabled:opacity-50"
+        >
+          Previous
+        </button>
+        <span>
+          Page {table.getState().pagination.pageIndex + 1} of{' '}
+          {table.getPageCount()}
+        </span>
+        <button
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+          className="px-2 py-1 border rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
+      </>
   );
 };
 

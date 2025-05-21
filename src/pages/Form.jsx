@@ -38,10 +38,11 @@ const Form = ({ editMenu, setEditMenu, fetchMenus }) => {
         await axios.post('http://127.0.0.1:8000/menus/create/', data, {
           headers: { Authorization: `Bearer ${access}` },
         });
+        toast.success('New Dish added');
       }
       fetchMenus();
       reset();
-      toast.success('New Dish added');
+      
     } catch (error) {
       console.error('Error submitting dish:', error);
     }

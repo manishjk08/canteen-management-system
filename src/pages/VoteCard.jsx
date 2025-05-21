@@ -1,29 +1,40 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-const VoteCard = () => {
+const VoteCard = ({menu}) => {
 const[votedata,setVoteData]=useState()
+const access =localStorage.getItem('access')
     
     const fetchVotes=async()=>{
         try {
-            const res= await axios.get(`http://127.0.0.1:8000/menus/${votedata.id}/vote`)
-            setVoteData(res)
-            fetchVotes()
+            const res= await axios.get(`http://127.0.0.1:8000/menus/${menu.id}/votes`,
+              {
+                headers:{
+                  Authorization:`Bearer ${access}`
+                }
+              }
+            )
+            setVoteData(res.data.total_votes);
+            
         } catch (error) {
             
         }
     }
-    useEffect(()=>{
-        fetchVotes()
-    },[])
-
-
+   useEffect(() => {
+    if (menu?.id){
+      fetchVotes();
+    } 
+  }, [menu]);
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-4 h-full">
-      <h2 className="text-lg font-semibold text-gray-800">Votes</h2>
-      <p className="text-gray-600">Total Votes:{votedata} </p>
-    </div>
+    <div className="">
+  <h1 className="text-base sm:text-lg text-gray-700 font-semibold mb-1 break-words">
+    Dish: {menu.dishes}
+  </h1>
+  <p className="text-sm sm:text-base font-medium text-gray-600">
+    Total Votes: <span className="font-bold text-gray-800">{votedata}</span>
+  </p>
+</div>
   )
 }
 

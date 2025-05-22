@@ -45,6 +45,8 @@ const Dashboard = () => {
     }
   };
 
+  
+
   useEffect(() => {
     fetchMenus();
   }, []);
@@ -72,6 +74,7 @@ const Dashboard = () => {
   };
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col lg:flex-row">
+
       <aside className="w-full lg:w-64 bg-white shadow-md p-6 flex flex-col justify-between lg:fixed lg:h-screen lg:top-0 lg:left-0">
         <div>
           <h2 className="text-2xl font-bold text-gray-800 mb-6">Admin Dashboard</h2>
@@ -93,40 +96,50 @@ const Dashboard = () => {
         </div>
       </aside>
 
-      <div className="flex-1 lg:ml-64 p-4 sm:p-6 lg:p-8 flex flex-col gap-10">
-     <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 p-4">
-  
-  <div className="w-full lg:w-2/3">
-    <Form
-      editMenu={editMenu}
-      setEditMenu={setEditMenu}
-      fetchMenus={fetchMenus}
-    />
-  </div>
 
-  
-<div className="w-full lg:w-1/3 p-4 bg-white shadow-md rounded-xl border border-gray-200">
-  <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-gray-700">Votes</h2>
-
-  <div className="flex flex-col gap-2 overflow-y-auto max-h-[300px] pr-2">
-    {todayMenuId?.length > 0 ? (
-      todayMenuId.map(menu => (
-        <VoteCard key={menu.id} menu={menu} />
-      ))
-    ) : (
-      <p className="text-gray-500 text-sm">No menus available for today.</p>
-    )}
-  </div>
-</div>
-</div>
+      <main className="flex-1 lg:ml-64 p-4 sm:p-6 lg:p-8 flex flex-col gap-10">
 
 
-        <Table
-          data={data}
-          deleteMenu={deleteMenu}
-          setEditMenu={setEditMenu} />
-      </div>
+        <div className="flex flex-col xl:flex-row gap-6 xl:gap-10">
+
+
+          <div className="w-full xl:w-1.5/3">
+            <Form
+              editMenu={editMenu}
+              setEditMenu={setEditMenu}
+              fetchMenus={fetchMenus}
+            />
+          </div>
+
+
+          <div className="w-full xl:w-1.5/3 p-4 bg-white shadow-md rounded-xl border border-gray-200">
+            <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-gray-700">Votes</h2>
+            <div className="flex flex-col gap-2 overflow-y-auto max-h-[300px] pr-2">
+              {todayMenuId?.length > 0 ? (
+                todayMenuId.map(menu => (
+                  <VoteCard key={menu.id} menu={menu} />
+                ))
+              ) : (
+                <p className="text-gray-500 text-sm">No menus available for today.</p>
+              )}
+            </div>
+          </div>
+        </div>
+
+
+        <div>
+          <Table
+            data={data}
+            deleteMenu={deleteMenu}
+            setEditMenu={setEditMenu}
+          />
+        </div>
+
+
+       
+      </main>
     </div>
+
   );
 };
 

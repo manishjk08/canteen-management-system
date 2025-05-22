@@ -102,7 +102,7 @@ const Table = ({ data, deleteMenu, setEditMenu }) => {
         <button
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
-          className="px-2 py-1 border rounded disabled:opacity-50"
+          className="px-2 py-1 text-white bg-blue-600 rounded disabled:opacity-50"
         >
           Previous
         </button>
@@ -113,7 +113,7 @@ const Table = ({ data, deleteMenu, setEditMenu }) => {
         <button
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
-          className="px-2 py-1 border rounded disabled:opacity-50"
+          className="px-2 py-1 text-white rounded bg-blue-600 disabled:opacity-50"
         >
           Next
         </button>

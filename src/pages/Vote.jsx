@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import { logout } from '../features/auth/authSlice'
-
+import DigitalClock from '../components/DigitalClock'
 const Vote = () => {
   const access = localStorage.getItem('access')
   const refresh = localStorage.getItem('refresh')
@@ -11,6 +11,7 @@ const Vote = () => {
 
   const [menu, setMenu] = useState([])
   const [votedMenuId, setVotedMenuId] = useState(null)
+  const [votingClosed,setVotingClosed]=useState(false)
   const today = new Date().toISOString().split('T')[0];
 
   const getTodayMenu = async () => {
@@ -60,6 +61,21 @@ const Vote = () => {
     }
   }
 
+  useEffect(()=>{
+    const checkVotingStatus=()=>{
+      const now=new Date()
+      const endTime=new Date()
+      endTime.setHours(17,0,0,0)
+      if(now>endTime){
+        setVotingClosed(true)
+      }
+    }
+      checkVotingStatus()
+      const interval=setInterval(checkVotingStatus,6000)
+      return ()=>clearInterval(interval)
+  },[])
+
+
 
 
   const handleLogout = async () => {
@@ -87,6 +103,11 @@ const Vote = () => {
   return (
     <div className="p-4 ">
       <h1 className="text-3xl uppercase mb-4">Welcome {username}</h1>
+      <div className='flex gap-5 justify-center text-gray-800 font-medium'>
+       <h1 className='text-2xl'>Voting closes at 5 pm</h1>
+        <DigitalClock/>
+      </div>
+      
       <button
         onClick={handleLogout}
         className="px-3 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
@@ -114,10 +135,10 @@ const Vote = () => {
               </div>
               <button
                 onClick={() => submitvote(menu.id)}
-                disabled={votedMenuId !== null}
+                disabled={ votingClosed }
                 className={`w-full mt-6 px-4 py-2 rounded-xl text-white font-semibold transition-colors duration-300 ${votedMenuId === menu.id
                   ? 'bg-gray-400 cursor-not-allowed'
-                  : votedMenuId !== null
+                  : votedMenuId !== null || votingClosed
                     ? 'bg-gray-300 cursor-not-allowed'
                     : 'bg-blue-500 hover:bg-blue-600'
                   }`}
@@ -130,6 +151,7 @@ const Vote = () => {
       ) : <h1 className='text-4xl text-center'>NO menus to display today</h1>}
 
     </div>
+   
     </div>
   )
 }

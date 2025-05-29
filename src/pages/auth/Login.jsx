@@ -1,7 +1,7 @@
 
 import {useForm} from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { login } from '../../features/auth/authSlice'
 import axios from 'axios'
 import { useState } from 'react'

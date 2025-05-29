@@ -36,7 +36,7 @@ const Table = ({ data, deleteMenu, setEditMenu }) => {
       cell: ({ row }) => (
         <>
           <button
-            className="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600 "
+            className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 "
             onClick={() => deleteMenu(row.original.id)}
           >
             Delete
@@ -68,7 +68,7 @@ const Table = ({ data, deleteMenu, setEditMenu }) => {
 
   return (
     <>
-    <div className="w-full overflow-x-auto rounded-xl shadow-md bg-white border border-gray-200">
+    <div className="lg:w-3/4 overflow-x-auto rounded-xl shadow-md bg-white border border-gray-200">
       <table className="min-w-full text-sm text-left text-gray-700">
         <thead className=" text-xs uppercase bg-gray-100 text-gray-600">
           {table.getHeaderGroups().map((headerGroup) => (
@@ -97,8 +97,7 @@ const Table = ({ data, deleteMenu, setEditMenu }) => {
           ))}
         </tbody>
       </table>
-    </div>
-     <div className="flex justify-center gap-2 mt-4">
+      <div className="flex justify-center gap-2 m-4">
         <button
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
@@ -118,6 +117,8 @@ const Table = ({ data, deleteMenu, setEditMenu }) => {
           Next
         </button>
       </div>
+    </div>
+     
       </>
   );
 };

@@ -1,10 +1,11 @@
 import { createSlice,  } from "@reduxjs/toolkit";
 import {jwtDecode} from 'jwt-decode';
+import Cookies from 'js-cookie'
 
 
-const access=localStorage.getItem('access')
-const refresh=localStorage.getItem('refresh')
-const role=localStorage.getItem('role')
+const access=Cookies.get('access')
+const refresh=Cookies.get('refresh')
+const role=Cookies.get('role')
 
 let user=null;
 if(access){
@@ -25,10 +26,10 @@ const authSlice =createSlice({
            state.refresh=action.payload.refresh;
            state.role=action.payload.role;
            state.user={ role: action.payload.role }
-           localStorage.setItem('access',action.payload.access)
-           localStorage.setItem('refresh',action.payload.refresh)
-           localStorage.setItem('role',action.payload.role)
-           localStorage.setItem('username',action.payload.username)
+           Cookies.set('access',action.payload.access)
+           Cookies.set('refresh',action.payload.refresh)
+           Cookies.set('role',action.payload.role)
+           Cookies.set('username',action.payload.username)
            
         },
         logout:(state)=>{
@@ -36,10 +37,10 @@ const authSlice =createSlice({
             state.refresh=null;
             state.role=null;
             state.user=null;
-            localStorage.removeItem('access')
-            localStorage.removeItem('refresh')
-            localStorage.removeItem('role')
-            localStorage.removeItem('username')
+            Cookies.remove('access')
+            Cookies.remove('refresh')
+            Cookies.remove('role')
+            Cookies.remove('username')
         }
     }
 })

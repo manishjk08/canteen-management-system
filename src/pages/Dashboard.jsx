@@ -4,16 +4,18 @@ import { logout } from '../features/auth/authSlice';
 import Form from './Form';
 import Table from './Table';
 import VoteCard from './VoteCard';
+import Report from '../components/Report';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast'
+import Cookies from 'js-cookie'
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
   const [editMenu, setEditMenu] = useState(null);
   const [todayMenuId, setTodayMenuId] = useState(null)
-  const access = localStorage.getItem('access');
-  const refresh = localStorage.getItem('refresh')
+  const access = Cookies.get('access');
+  const refresh = Cookies.get('refresh')
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -103,7 +105,7 @@ const Dashboard = () => {
         <div className="flex flex-col xl:flex-row gap-6 xl:gap-10">
 
 
-          <div className="w-full xl:w-1.5/3">
+          <div className="lg:w-2/4">
             <Form
               editMenu={editMenu}
               setEditMenu={setEditMenu}
@@ -112,9 +114,9 @@ const Dashboard = () => {
           </div>
 
 
-          <div className="w-full xl:w-1.5/3 p-4 bg-white shadow-md rounded-xl border border-gray-200">
-            <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-gray-700">Votes</h2>
-            <div className="flex flex-col gap-2 overflow-y-auto max-h-[300px] pr-2">
+          <div className="lg:1/4 p-4 bg-white shadow-md rounded-xl border border-gray-200">
+            <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-gray-700">Today's Menu Votes</h2>
+            <div className="flex flex-col gap-4 overflow-y-auto max-h-[300px] pr-2">
               {todayMenuId?.length > 0 ? (
                 todayMenuId.map(menu => (
                   <VoteCard key={menu.id} menu={menu} />
@@ -136,7 +138,9 @@ const Dashboard = () => {
         </div>
 
 
-       
+       <div>
+        <Report/>
+       </div>
       </main>
     </div>
 

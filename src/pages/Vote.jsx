@@ -2,16 +2,18 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import { logout } from '../features/auth/authSlice'
-import DigitalClock from '../components/DigitalClock'
+import Cookies from 'js-cookie'
 const Vote = () => {
-  const access = localStorage.getItem('access')
-  const refresh = localStorage.getItem('refresh')
-  const username = localStorage.getItem('username')
+  const access = Cookies.get('access')
+  const refresh = Cookies.get('refresh')
+  const username = Cookies.get('username')
+  const role=Cookies.get('role')
   const dispatch = useDispatch()
 
   const [menu, setMenu] = useState([])
   const [votedMenuId, setVotedMenuId] = useState(null)
   const [votingClosed,setVotingClosed]=useState(false)
+  const [timeLeft,setTimeLeft]=useState('')
   const today = new Date().toISOString().split('T')[0];
 
   const getTodayMenu = async () => {
@@ -61,20 +63,28 @@ const Vote = () => {
     }
   }
 
-  useEffect(()=>{
-    const checkVotingStatus=()=>{
-      const now=new Date()
-      const endTime=new Date()
-      endTime.setHours(17,0,0,0)
-      if(now>endTime){
+useEffect(() => {
+    const updateTimer = () => {
+      const now = new Date();
+      const closingTime = new Date();
+      closingTime.setHours(17, 0, 0, 0);
+      const diff = closingTime - now;
+
+      if (diff > 0) {
+        const hours = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, '0');
+        const minutes = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, '0');
+        const seconds = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
+        setTimeLeft(`${hours}h ${minutes}m ${seconds}s`);
+      } else {
+        setTimeLeft('00:00:00');
         setVotingClosed(true)
       }
-    }
-      checkVotingStatus()
-      const interval=setInterval(checkVotingStatus,6000)
-      return ()=>clearInterval(interval)
-  },[])
+    };
 
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
 
 
@@ -102,54 +112,59 @@ const Vote = () => {
 
   return (
     <div className="p-4 ">
-      <h1 className="text-3xl uppercase mb-4">Welcome {username}</h1>
-      <div className='flex gap-5 justify-center text-gray-800 font-medium'>
-       <h1 className='text-2xl'>Voting closes at 5 pm</h1>
-        <DigitalClock/>
-      </div>
-      
-      <button
+      <div className='flex gap-5 justify-between'>
+        <h1 className="text-3xl uppercase mb-4">Welcome <span className='text-red-500'>{username}</span>  </h1>
+        <div>
+          <span className='font-extralight bg-blue-400 rounded p-0.5 mx-1 text-white text-xs'>{role}</span>
+          <button
         onClick={handleLogout}
         className="px-3 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
       >
         Logout
       </button>
-      <div className="flex flex-wrap justify-center gap-6">
-      {menu.length > 0 ? (
-        menu.map((menu) => (
-          <div
-            key={menu.id}
-            className="max-w-sm  bg-white shadow-lg rounded-2xl overflow-hidden mt-6 "
-          >
-            <div className="p-6 text-center ">
-              <h2 className="text-2xl font-extrabold text-gray-800 mb-3">
-                🍽️ Today's Menu
-              </h2>
-              <div className="space-y-2 text-gray-700">
-                <p>
-                  <span className="font-medium">ID:</span> {menu.id}
-                </p>
-                <p>
-                  <span className="font-medium">Dish:</span> <span className='font-bold'>{menu.dishes}</span>
-                </p>
-              </div>
-              <button
-                onClick={() => submitvote(menu.id)}
-                disabled={ votingClosed }
-                className={`w-full mt-6 px-4 py-2 rounded-xl text-white font-semibold transition-colors duration-300 ${votedMenuId === menu.id
-                  ? 'bg-gray-400 cursor-not-allowed'
-                  : votedMenuId !== null || votingClosed
-                    ? 'bg-gray-300 cursor-not-allowed'
-                    : 'bg-blue-500 hover:bg-blue-600'
-                  }`}
-              >
-                {votedMenuId === menu.id ? '✅ You have Voted' : "🍴 I'll Attend"}
-              </button>
-            </div>
-          </div>
-        ))
-      ) : <h1 className='text-4xl text-center'>NO menus to display today</h1>}
+        </div>
+      
+      </div>
+      
+     <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+      <h1 className="text-3xl font-bold text-center mb-8">🍽️ Today's Lunch Menu</h1>
+        {menu.length > 0 ? (
+          menu.map((menuItem) => (
+            <div
+              key={menuItem.id}
+              className="bg-gray-100 rounded-sm shadow-sm w-full mb-4"
+            >
+              <div className="p-3">
+                <p className='font-bold'>ID: <span className='font-bold text-grayCookies-900'>{menuItem.id}</span></p>
+                <p className='text-sm font-light'>{menuItem.date}</p>
+                <p className="font-bold text-xl mt-1">{menuItem.dishes}</p>
 
+                <button
+                  onClick={() => submitvote(menuItem.id)}
+                  disabled={votingClosed || votedMenuId !== null}
+                  className={` mt-1 px-4 py-2 rounded-xl text-white font-semibold transition-colors duration-300 ${
+                    votedMenuId === menuItem.id
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : votedMenuId !== null || votingClosed
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-green-600 hover:bg-green-700'
+                  }`}
+                >
+                  {votedMenuId === menuItem.id ? '✅ You have Voted' : "🍴 I'll Attend"}
+                </button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <h2 className="text-2xl text-center text-gray-600">No menus to display today</h2>
+        )}
+      
+
+      <div className="mt-10 bg-gray-100 border border-gray-300 rounded-lg p-4 text-center max-w-md mx-auto">
+        <p className="text-lg text-gray-800">Voting closes at 5 PM</p>
+        <p className="text-2xl font-semibold text-red-500 mt-2">{timeLeft}</p>
+        
+      </div>
     </div>
    
     </div>

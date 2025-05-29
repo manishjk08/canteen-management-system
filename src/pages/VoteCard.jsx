@@ -1,9 +1,10 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import Cookies from 'js-cookie'
 
 const VoteCard = ({menu}) => {
 const[votedata,setVoteData]=useState()
-const access =localStorage.getItem('access')
+const access =Cookies.get('access')
     
     const fetchVotes=async()=>{
         try {
@@ -27,13 +28,10 @@ const access =localStorage.getItem('access')
   }, [menu]);
 
   return (
-    <div className="">
-  <h1 className="text-base sm:text-lg text-gray-700 font-semibold mb-1 break-words">
-    Dish: {menu.dishes}
-  </h1>
-  <p className="text-sm sm:text-base font-medium text-gray-600">
-    Total Votes: <span className="font-bold text-gray-800">{votedata}</span>
-  </p>
+  <div className="bg-gray-50 p-4 rounded-lg shadow-sm border-l-4 border-blue-600 max-w-xs">
+  <h2 className="text-lg font-bold mb-1 text-blue-800">{menu.dishes}</h2>
+  <h3 className='text-sm font-light'>Max capacity: {menu.max_capacity}</h3>
+  <p className="text-md font-bold"> <span className='text-purple-800 font-bold'>{votedata} </span> votes</p>
 </div>
   )
 }

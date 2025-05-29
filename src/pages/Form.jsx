@@ -2,9 +2,10 @@ import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import Cookies from 'js-cookie'
 
 const Form = ({ editMenu, setEditMenu, fetchMenus }) => {
-  const access = localStorage.getItem('access');
+  const access = Cookies.get('access');
 
   const {
     register,

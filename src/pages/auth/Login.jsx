@@ -1,4 +1,3 @@
-
 import {useForm} from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
@@ -62,7 +61,7 @@ const Login = () => {
         required: 'Username is required',
         minLength:{
             value:5,
-            message:'UserName should be minimum 5 characters long'
+            message:'UserName is incorrect'
 
         } 
     })}
@@ -76,7 +75,7 @@ const Login = () => {
         required: 'Password is required',
         minLength:{
             value:8,
-            message:'Password should be mimimum 8 characters long'
+            message:'Password is incorrect'
         } 
     })}
       placeholder="Password"

@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../components/axiosInstance';
 import toast from 'react-hot-toast';
 import Cookies from 'js-cookie'
 
@@ -29,14 +29,14 @@ const Form = ({ editMenu, setEditMenu, fetchMenus }) => {
   const onSubmit = async (data) => {
     try {
       if (editMenu) {
-        await axios.put(`http://127.0.0.1:8000/edit/menus/${editMenu.id}/`, data, {
+        await axiosInstance.put(`/edit/menus/${editMenu.id}/`, data, {
           headers: { Authorization: `Bearer ${access}` },
         });
         toast.success('Dish updated');
         setEditMenu(null);
         
       } else {
-        await axios.post('http://127.0.0.1:8000/menus/create/', data, {
+        await axiosInstance.post('/menus/create/', data, {
           headers: { Authorization: `Bearer ${access}` },
         });
         toast.success('New Dish added');

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import axiosInstance from '../components/axiosInstance'
 import { useDispatch } from 'react-redux'
 import { logout } from '../features/auth/authSlice'
 import Cookies from 'js-cookie'
@@ -18,7 +18,7 @@ const Vote = () => {
 
   const getTodayMenu = async () => {
     try {
-      const res = await axios.get('http://127.0.0.1:8000/menus/', {
+      const res = await axiosInstance.get('/menus/', {
         headers: { Authorization: `Bearer ${access}` },
       })
       const todayMenu = res.data.filter((menu) => menu.date === today)
@@ -30,8 +30,8 @@ const Vote = () => {
 
   const submitvote = async (id) => {
     try {
-      await axios.post(
-        `http://127.0.0.1:8000/votes/`,
+      await axiosInstance.post(
+        `/votes/`,
         {
           menu: id,
           will_attend: true,
@@ -50,7 +50,7 @@ const Vote = () => {
 
   const CheckVote = async () => {
     try {
-      const res = await axios.get('http://127.0.0.1:8000/votes/list', {
+      const res = await axiosInstance.get('/votes/list/', {
         headers: { Authorization: `Bearer ${access}` },
       })
 
@@ -90,8 +90,8 @@ useEffect(() => {
 
   const handleLogout = async () => {
     try {
-      await axios.post(
-        'http://127.0.0.1:8000/logout/',
+      await axiosInstance.post(
+        '/logout/',
         { refresh: refresh },
         {
           headers: {

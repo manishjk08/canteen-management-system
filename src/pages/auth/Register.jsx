@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axiosInstance from '../../components/axiosInstance'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import {  useNavigate } from 'react-router-dom'
@@ -15,7 +15,7 @@ const {register,
 
 const onSubmit=async(data)=>{
   try{
-       await axios.post('http://127.0.0.1:8000/',{
+       await axiosInstance.post('/',{
       first_name: data.first_name,
       last_name: data.last_name,
       username: data.username,

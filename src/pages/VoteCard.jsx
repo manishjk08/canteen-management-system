@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axiosInstance from '../components/axiosInstance'
 import { useEffect, useState } from 'react'
 import Cookies from 'js-cookie'
 
@@ -8,7 +8,7 @@ const access =Cookies.get('access')
     
     const fetchVotes=async()=>{
         try {
-            const res= await axios.get(`http://127.0.0.1:8000/menus/${menu.id}/votes`,
+            const res= await axiosInstance.get(`/menus/${menu.id}/votes`,
               {
                 headers:{
                   Authorization:`Bearer ${access}`

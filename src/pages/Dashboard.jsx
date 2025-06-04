@@ -6,7 +6,7 @@ import Table from './Table';
 import VoteCard from './VoteCard';
 import Report from '../components/Report';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../components/axiosInstance';
 import toast from 'react-hot-toast'
 import Cookies from 'js-cookie'
 
@@ -21,7 +21,7 @@ const Dashboard = () => {
 
   const fetchMenus = async () => {
     try {
-      const res = await axios.get('http://127.0.0.1:8000/menus/', {
+      const res = await axiosInstance.get('/menus/', {
         headers: { Authorization: `Bearer ${access}` },
       });
       setData(res.data);
@@ -36,7 +36,7 @@ const Dashboard = () => {
 
   const deleteMenu = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:8000/menus/${id}/`, {
+      await axios.delete(`/menus/${id}/`, {
         headers: { Authorization: `Bearer ${access}` },
       });
       toast.success('Dish deleted successfully');
@@ -60,8 +60,8 @@ const Dashboard = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post(
-        'http://127.0.0.1:8000/logout/',
+      await axiosInstance.post(
+        '/logout/',
         { refresh: refresh },
         {
           headers: {

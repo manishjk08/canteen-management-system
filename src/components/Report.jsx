@@ -12,7 +12,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import axios from 'axios';
+import axiosInstance from '../components/axiosInstance';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -27,7 +27,7 @@ const Report = () => {
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/report/', {
+        const response = await axiosInstance.get('/report/', {
           params: {
             from: '2025-05-01',
             to: today,

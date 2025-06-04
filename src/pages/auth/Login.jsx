@@ -2,8 +2,9 @@ import {useForm} from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { login } from '../../features/auth/authSlice'
-import axios from 'axios'
+import axiosInstance from '../../components/axiosInstance'
 import { useState } from 'react'
+
 
 const Login = () => {
   
@@ -23,7 +24,7 @@ const Login = () => {
 
     const onSubmit = async(data)=>{
       try {
-         const res = await axios.post('http://127.0.0.1:8000/login/',data) 
+         const res = await axiosInstance.post('/login/',data) 
       dispatch(login({
         access:res.data.access,
         refresh:res.data.refresh,

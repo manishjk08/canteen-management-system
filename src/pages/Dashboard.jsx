@@ -36,7 +36,7 @@ const Dashboard = () => {
 
   const deleteMenu = async (id) => {
     try {
-      await axios.delete(`/menus/${id}/`, {
+      await axiosInstance.delete(`/menus/${id}/`, {
         headers: { Authorization: `Bearer ${access}` },
       });
       toast.success('Dish deleted successfully');

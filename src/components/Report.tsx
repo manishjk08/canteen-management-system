@@ -10,14 +10,19 @@ import {
   Title,
   Tooltip,
   Legend,
+  ChartOptions,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import axiosInstance from '../components/axiosInstance';
+import axiosInstance from './axiosInstance';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+interface ReportData{
+  date: string;
+  vote_count: number;
+}
 
 const Report = () => {
-  const [reportData, setReportData] = useState([]);
+  const [reportData, setReportData] = useState<ReportData[]>([]);
   const access = Cookies.get('access');
   const today = new Date().toISOString().split('T')[0];
   const colors = ['	#FF6384', '#FF9F40', '#FFCD56', '#4BC0C0', '#36A2EB', '#9966FF'];
@@ -31,6 +36,7 @@ const Report = () => {
           params: {
             from: '2025-05-01',
             to: today,
+            export:exportCSV
           },
           headers: {
             Authorization: `Bearer ${access}`,
@@ -52,7 +58,7 @@ const Report = () => {
     }
   }, [access, today]);
 
-  const options = {
+  const options :ChartOptions<'bar'>= {
     responsive: true,
     plugins: {
       legend: { position: 'top' },

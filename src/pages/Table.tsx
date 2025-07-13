@@ -1,20 +1,34 @@
 import { useState } from 'react';
 import {
   useReactTable,
+  CellContext,
   getCoreRowModel,
   flexRender,
   getSortedRowModel,
   getPaginationRowModel,
+  SortingState,
+  ColumnDef
 } from '@tanstack/react-table';
 
-const Table = ({ data, deleteMenu, setEditMenu }) => {
-  const [sorting,setSorting]=useState()
+interface MenuItem{
+  id: number;
+  date: string;
+  dishes: string;
+  max_capacity: number;
+}
+interface TableProps{
+  data: MenuItem[];
+  deleteMenu: (id: string) => void;
+  setEditMenu: (menu: MenuItem) => void;
+}
+const Table: React.FC <TableProps> =  ({ data, deleteMenu, setEditMenu }) => {
+  const [sorting,setSorting]=useState<SortingState>([])
   const[pagination,setPagination]=useState({
       pageIndex:0,
       pageSize:5,
   })
  
-  const columns = [
+  const columns:ColumnDef<MenuItem>[] = [
     {
       header: 'Date',
       accessorKey: 'date',
@@ -32,12 +46,13 @@ const Table = ({ data, deleteMenu, setEditMenu }) => {
     },
     {
       header: 'Action',
+      id:'action',
       accessorKey: 'action',
       cell: ({ row }) => (
         <>
           <button
             className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 "
-            onClick={() => deleteMenu(row.original.id)}
+            onClick={() => deleteMenu(row.original.id.toString())}
           >
             Delete
           </button>
@@ -66,6 +81,7 @@ const Table = ({ data, deleteMenu, setEditMenu }) => {
     getPaginationRowModel:getPaginationRowModel()
   });
 
+
   return (
     <>
     <div className="lg:w-3/4 overflow-x-auto rounded-xl shadow-md bg-white border border-gray-200">
@@ -79,7 +95,7 @@ const Table = ({ data, deleteMenu, setEditMenu }) => {
                    {{
                     asc: ' 🔼',
                     desc: ' 🔽',
-                  }[header.column.getIsSorted()] ?? null}
+                  }[header.column.getIsSorted()as string] ?? null}
                 </th>
               ))}
             </tr>

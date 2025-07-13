@@ -2,6 +2,8 @@ import axiosInstance from '../components/axiosInstance'
 import { useEffect, useState } from 'react'
 import Cookies from 'js-cookie'
 
+
+
 const VoteCard = ({menu}) => {
 const[votedata,setVoteData]=useState()
 const access =Cookies.get('access')
@@ -15,10 +17,10 @@ const access =Cookies.get('access')
                 }
               }
             )
-            setVoteData(res.data.total_votes);
+            setVoteData(res.data.data.total_votes);
             
         } catch (error) {
-            
+              console.error('Vote fetch failed:', error);
         }
     }
    useEffect(() => {

@@ -3,6 +3,14 @@ import axiosInstance from '../components/axiosInstance'
 import { useDispatch } from 'react-redux'
 import { logout } from '../features/auth/authSlice'
 import Cookies from 'js-cookie'
+
+interface MenuItem{
+  id: number;
+  date: string;
+  dishes: string;
+  max_capacity: number;
+}
+
 const Vote = () => {
   const access = Cookies.get('access')
   const refresh = Cookies.get('refresh')
@@ -10,8 +18,8 @@ const Vote = () => {
   const role=Cookies.get('role')
   const dispatch = useDispatch()
 
-  const [menu, setMenu] = useState([])
-  const [votedMenuId, setVotedMenuId] = useState(null)
+  const [menu, setMenu] = useState <MenuItem[]>([])
+  const [votedMenuId, setVotedMenuId] = useState<number|null> (null)
   const [votingClosed,setVotingClosed]=useState(false)
   const [timeLeft,setTimeLeft]=useState('')
   const today = new Date().toISOString().split('T')[0];
@@ -21,14 +29,14 @@ const Vote = () => {
       const res = await axiosInstance.get('/menus/', {
         headers: { Authorization: `Bearer ${access}` },
       })
-      const todayMenu = res.data.filter((menu) => menu.date === today)
+      const todayMenu = res.data.data.filter((menu:MenuItem) => menu.date === today)
       setMenu(todayMenu)
     } catch (error) {
       console.error('Failed to get todays menus:', error)
     }
   }
 
-  const submitvote = async (id) => {
+  const submitvote = async (id:number) => {
     try {
       await axiosInstance.post(
         `/votes/`,
@@ -54,7 +62,7 @@ const Vote = () => {
         headers: { Authorization: `Bearer ${access}` },
       })
 
-      const voted = res.data.votes[0]
+      const voted = res.data.data.votes[0]
       if (voted) {
         setVotedMenuId(voted.menu)
       }
@@ -68,7 +76,7 @@ useEffect(() => {
       const now = new Date();
       const closingTime = new Date();
       closingTime.setHours(17, 0, 0, 0);
-      const diff = closingTime - now;
+      const diff = closingTime.getTime() - now.getTime();
 
       if (diff > 0) {
         const hours = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, '0');

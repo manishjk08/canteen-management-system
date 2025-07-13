@@ -4,6 +4,20 @@ import { useForm } from 'react-hook-form'
 import {  useNavigate } from 'react-router-dom'
 import {toast} from 'react-hot-toast'
 
+interface Data{
+  first_name: string;
+  last_name: string;
+  username: string;
+  email: string;
+  password: string;
+  street: string;
+  city: string;
+  district: string;
+  province: string;
+  zipcode: string;
+  country?: string|'Nepal'; 
+  role:string
+}
 const Register = () => {
   const[error,setError]=useState('')
 const navigate=useNavigate()
@@ -11,15 +25,24 @@ const navigate=useNavigate()
 const {register,
     handleSubmit,
     formState:{errors,isSubmitting},
-}=useForm()
+}=useForm<Data>()
 
-const onSubmit=async(data)=>{
+const onSubmit=async(data:Data)=>{
   try{
-       await axiosInstance.post('/',{
+    const addressObj = {
+        street: data.street,
+        city: data.city,
+        district: data.district,
+        province: data.province,
+        zipcode: data.zipcode,
+        country: data.country || 'Nepal'
+      }
+    const res=   await axiosInstance.post('/',{
       first_name: data.first_name,
       last_name: data.last_name,
       username: data.username,
       email: data.email,
+      address: addressObj,
       password: data.password,
       role: parseInt( data.role), 
     }, {
@@ -27,9 +50,13 @@ const onSubmit=async(data)=>{
         'Content-Type': 'application/json',
       },
   })
+   console.log('Response:', res.data);
   toast.success('Registration sucessfull')
    navigate('/')
   }catch (err) {
+     console.error('Full error:', err);
+    console.error('Error response:', err.response?.data); 
+    console.error('Error status:', err.response?.status);
     let message = 'Registration failed';
     if (err.response?.status === 400 || err.response?.status === 401) {
       message = 'Invalid email';
@@ -74,6 +101,26 @@ const onSubmit=async(data)=>{
     })}
       placeholder="Email"
     />
+    <input
+  className="border border-gray-300 rounded px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
+  {...register('country', { required: 'Country is required' })}
+  placeholder="Country"
+/>
+    <input
+  className="border border-gray-300 rounded px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
+  {...register('street', { required: 'Street is required' })}
+  placeholder="Street"
+/>
+<input
+  className="border border-gray-300 rounded px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
+  {...register('city', { required: 'City is required' })}
+  placeholder="City"
+/>
+<input
+  className="border border-gray-300 rounded px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
+  {...register('zipcode', { required: 'Zipcode is required' })}
+  placeholder="Zipcode"
+/>
 
     <input
       className="border border-gray-300 rounded px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"

@@ -5,16 +5,19 @@ import { login } from '../../features/auth/authSlice'
 import axiosInstance from '../../components/axiosInstance'
 import { useState } from 'react'
 
-
+interface LoginData{
+    username: string;
+    password: string;
+}
 const Login = () => {
   
-    const [error,setError]=useState('')
+    const [error,setError]=useState<string>('')
     const navigate=useNavigate()
     const dispatch =useDispatch()
     const {register,
     handleSubmit,
     formState:{errors}
-    }=useForm()
+    }=useForm<LoginData>()
 
     const handleRegister=()=>{
         navigate('/register')
@@ -22,7 +25,7 @@ const Login = () => {
    
 
 
-    const onSubmit = async(data)=>{
+    const onSubmit = async(data:LoginData)=>{
       try {
          const res = await axiosInstance.post('/login/',data) 
       dispatch(login({
@@ -39,6 +42,7 @@ const Login = () => {
       }
       setError('')
       } catch (err) {
+        
     let message = 'Login failed';
     if (err.response?.status === 400 || err.response?.status === 401) {
       message = 'Invalid username or password';
@@ -68,7 +72,7 @@ const Login = () => {
     })}
       placeholder="Username"
     />
-    {errors.username&& <p className='text-red-500'>{errors.username.message}</p>}
+    {errors.username&& <p className='text-red-500'>{String(errors.username.message)}</p>}
     <input
       type="password"
       className="border border-gray-300 rounded px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
@@ -81,7 +85,7 @@ const Login = () => {
     })}
       placeholder="Password"
     />
-    {errors.password && <p className='text-red-500'>{errors.password.message}</p>}
+    {errors.password && <p className='text-red-500'>{String(errors.password.message)}</p>}
     <button className="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600">
       Login
     </button>

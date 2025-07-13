@@ -5,15 +5,22 @@ import Form from './Form';
 import Table from './Table';
 import VoteCard from './VoteCard';
 import Report from '../components/Report';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import axiosInstance from '../components/axiosInstance';
 import toast from 'react-hot-toast'
 import Cookies from 'js-cookie'
 
+
+interface MenuItem{
+  id: number;
+  date: string;
+  dishes: string;
+  max_capacity: number;
+}
 const Dashboard = () => {
   const [data, setData] = useState([]);
-  const [editMenu, setEditMenu] = useState(null);
-  const [todayMenuId, setTodayMenuId] = useState(null)
+  const [editMenu, setEditMenu] = useState <MenuItem|null>(null);
+  const [todayMenuId, setTodayMenuId] = useState<MenuItem[]>([])
   const access = Cookies.get('access');
   const refresh = Cookies.get('refresh')
   const navigate = useNavigate();
@@ -24,19 +31,20 @@ const Dashboard = () => {
       const res = await axiosInstance.get('/menus/', {
         headers: { Authorization: `Bearer ${access}` },
       });
-      setData(res.data);
+      const menuArray=res.data.data
+      setData(menuArray);
       const today = new Date().toISOString().split('T')[0];
-      const todayMenu = res.data.filter(menu => menu.date === today);
-      setTodayMenuId(todayMenu);
+      const todayMenu = menuArray.filter((menu:MenuItem) => menu.date === today) ;
+      setTodayMenuId( todayMenu);
     } catch (error) {
       console.error('Failed to fetch menus:', error);
       toast.error('Failed to load menus');
     }
   };
 
-  const deleteMenu = async (id) => {
+  const deleteMenu = async (id:string) => {
     try {
-      await axiosInstance.delete(`/menus/${id}/`, {
+      await axiosInstance.delete(`/menus/${parseInt(id)}/`, {
         headers: { Authorization: `Bearer ${access}` },
       });
       toast.success('Dish deleted successfully');
@@ -110,7 +118,7 @@ const Dashboard = () => {
               editMenu={editMenu}
               setEditMenu={setEditMenu}
               fetchMenus={fetchMenus}
-            />
+            /> 
           </div>
 
 

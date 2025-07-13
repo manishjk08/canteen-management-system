@@ -1,12 +1,13 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import {Provider} from 'react-redux'
-import {store} from '../src/app/store.jsx'
+import {store} from './app/store.js'
 import { Toaster } from 'react-hot-toast'
 import './index.css'
-import App from './App.jsx'
-
-createRoot(document.getElementById('root')).render(
+import App from './App.js'
+const root =(document.getElementById('root'))as HTMLElement
+createRoot(root).render
+(
   <Provider store={store}>
     <StrictMode>
     <App />

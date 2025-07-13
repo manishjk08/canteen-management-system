@@ -4,6 +4,12 @@ import axiosInstance from '../components/axiosInstance';
 import toast from 'react-hot-toast';
 import Cookies from 'js-cookie'
 
+interface FormData{
+  dishes: string;
+  date: string;
+  max_capacity: number;
+}
+
 const Form = ({ editMenu, setEditMenu, fetchMenus }) => {
   const access = Cookies.get('access');
 
@@ -12,7 +18,7 @@ const Form = ({ editMenu, setEditMenu, fetchMenus }) => {
     reset,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<FormData>();
 
   useEffect(() => {
     if (editMenu) {
@@ -21,12 +27,12 @@ const Form = ({ editMenu, setEditMenu, fetchMenus }) => {
         reset({
             dishes:"",
             date:"",
-            max_capacity:""
+            max_capacity:0
         })
     }
   }, [editMenu, reset]);
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data:FormData) => {
     try {
       if (editMenu) {
         await axiosInstance.put(`/edit/menus/${editMenu.id}/`, data, {

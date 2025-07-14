@@ -58,11 +58,13 @@ const Vote = () => {
 
   const CheckVote = async () => {
     try {
-      const res = await axiosInstance.get('/votes/list/', {
+      const res = await axiosInstance.get('/votes/list', {
         headers: { Authorization: `Bearer ${access}` },
       })
 
-      const voted = res.data.data.votes[0]
+      const voted = res.data.votes[0]
+      console.log("Voted data:", voted)
+      
       if (voted) {
         setVotedMenuId(voted.menu)
       }
@@ -143,7 +145,7 @@ useEffect(() => {
               className="bg-gray-100 rounded-sm shadow-sm w-full mb-4"
             >
               <div className="p-3">
-                <p className='font-bold'>ID: <span className='font-bold text-grayCookies-900'>{menuItem.id}</span></p>
+                <p className='font-bold'>ID: <span className='font-bold text-gray-900'>{menuItem.id}</span></p>
                 <p className='text-sm font-light'>{menuItem.date}</p>
                 <p className="font-bold text-xl mt-1">{menuItem.dishes}</p>
 

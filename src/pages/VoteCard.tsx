@@ -2,12 +2,16 @@ import axiosInstance from '../components/axiosInstance'
 import { useEffect, useState } from 'react'
 import Cookies from 'js-cookie'
 
+interface MenuItem{
+  id: number;
+  date: string;
+  dishes: string;
+  max_capacity: number;
+}
 
-
-const VoteCard = ({menu}) => {
-const[votedata,setVoteData]=useState()
+const VoteCard = ({menu}:{menu:MenuItem}) => {
+const[votedata,setVoteData]=useState<number>(0)
 const access =Cookies.get('access')
-    
     const fetchVotes=async()=>{
         try {
             const res= await axiosInstance.get(`/menus/${menu.id}/votes`,
@@ -16,8 +20,10 @@ const access =Cookies.get('access')
                   Authorization:`Bearer ${access}`
                 }
               }
+              
             )
-            setVoteData(res.data.data.total_votes);
+          
+            setVoteData(res.data.total_votes);
             
         } catch (error) {
               console.error('Vote fetch failed:', error);
